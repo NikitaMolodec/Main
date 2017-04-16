@@ -13,6 +13,8 @@ public class CsvCreator {
     public Properties properties;
     public List<String> header = new ArrayList<>();
     private static final Properties DEFAULT_PROPERTIES = new Properties();
+    private static final int MAX_VALUE = 100;
+    private Random random = new Random();
 
     public CsvCreator(String filename, Properties properties){
         this.filename = filename;
@@ -32,8 +34,7 @@ public class CsvCreator {
                 br.write(listToStr(header) + "\n");
             }
             for(int i = 0; i < length; i++){
-                Random random = new Random();
-                br.write(i * chast + properties.delimiter + random.nextInt(100) + "\n");
+                br.write(i * chast + properties.delimiter + random.nextInt(MAX_VALUE) + "\n");
             }
         } catch (IOException e) {
             throw  new IllegalStateException("Can't write in file");
