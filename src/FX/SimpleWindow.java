@@ -1,5 +1,7 @@
 package FX;
 
+
+import Common.CommonUtils;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -29,41 +31,51 @@ public class SimpleWindow extends Application {
         primaryStage.setTitle("My first window");
         primaryStage.show();
 
-        GridPane grid = FXUtils.createGrid();
+        GridPane grid = FXUtils.createGridPane();
 
         Scene scene = FXUtils.createScene(primaryStage, grid);
 
         Text sceneTitle = FXUtils.createText("Welcome");
-        grid.add(sceneTitle, 0, 0, 2, 1);
+        grid.add(sceneTitle, 32, 0, 2, 1);
 
-        Label userName = FXUtils.createLabel("User name:", "Tahoma", FontWeight.NORMAL, 15);
-        grid.add(userName, 0, 1);
+        Label inputText = FXUtils.createLabel("Input text:", Constants.DEFAULT_FAMILY, FontWeight.NORMAL, 15);
+        grid.add(inputText, 32, 1);
 
         TextField userTextField = new TextField();
-        grid.add(userTextField, 1, 1);
+        grid.add(userTextField, 33, 1);
 
-        Button btn = new Button("Sign in");
-        HBox hbBtn = FXUtils.createHBox(btn, 10, Pos.BOTTOM_RIGHT);
-        grid.add(hbBtn, 1, 4);
+        Button btn = new Button("Click on me");
+        HBox hbBtn = FXUtils.createHBox(10, Pos.BOTTOM_RIGHT);
+        hbBtn.getChildren().add(btn);
+        grid.add(hbBtn, 33, 4);
 
         final Text actionTarget = new Text();
-        grid.add(actionTarget, 1, 3);
+        grid.add(actionTarget, 33, 3);
 
         final TextArea area = new TextArea();
-        grid.add(area, 0, 5, 3, 1);
+        grid.add(area, 0, 5, Constants.TEXTAREACOLUMNCOUNT, Constants.TEXTAREARAWCOUNT);
+        area.setEditable(false);
+        area.setVisible(false);
+        area.setPrefColumnCount(Constants.TEXTAREACOLUMNCOUNT);
+        area.setPrefRowCount(Constants.TEXTAREARAWCOUNT);
 
+        //todo какие исключения ловить при нажатии кнопки?
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 try {
-                    if (!FXUtils.hasNumbers(userTextField.getText())) {
+                    if (!CommonUtils.hasNumbers(userTextField.getText())) {
                         actionTarget.setFill(Color.GREEN);
                         actionTarget.setText(userTextField.getText());
+                        actionTarget.setVisible(true);
+                        area.setVisible(false);
                     } else {
-                        throw new RuntimeException("Found numbers:" + FXUtils.getNumbers(userTextField.getText()));
+                        throw new RuntimeException("Found numbers:" + CommonUtils.getNumbers(userTextField.getText()));
                     }
                 }catch (RuntimeException ex){
-                    FXUtils.printExceptions(ex, area);
+                    actionTarget.setVisible(false);
+                    area.setVisible(true);
+                    area.setText(CommonUtils.stackTraceToString(ex));
                 }
             }
         });
