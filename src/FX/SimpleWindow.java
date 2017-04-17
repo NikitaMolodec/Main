@@ -54,6 +54,7 @@ public class SimpleWindow extends Application {
 
         final TextArea area = new TextArea();
         grid.add(area, 0, 5, Constants.TEXTAREACOLUMNCOUNT, Constants.TEXTAREARAWCOUNT);
+        area.setStyle("-fx-text-fill: red;");
         area.setEditable(false);
         area.setVisible(false);
         area.setPrefColumnCount(Constants.TEXTAREACOLUMNCOUNT);
